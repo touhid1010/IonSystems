@@ -24,4 +24,5 @@
         android:background="#00000000">
 
     </ProgressBar>
+
 </RelativeLayout>

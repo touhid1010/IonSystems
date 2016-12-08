@@ -27,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        }
+
 
         webView_main = (WebView) findViewById(R.id.webView_main);
         /**
@@ -46,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         webView_main.canGoBack();
         webView_main.canGoForward();
         webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
-        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);// to load updated data
         webSettings.setAppCacheEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
@@ -89,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
     } // end of On create
 
     @Override
@@ -107,29 +110,49 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_about:
+
+                MyMenuActions.MenuAboutMe(this).show();
+
+                break;
+
+            case R.id.action_exit:
+
+                MyMenuActions.MenuExit(this).show();
+
+                break;
         }
+//        if (id == R.id.action_about) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
+
+        if (webView_main.canGoBack()) {
+            webView_main.goBack();
+        } else {
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
+            }
+
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Back again to exit", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
         }
 
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Back again to exit", Toast.LENGTH_SHORT).show();
 
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 2000);
     }
 }
